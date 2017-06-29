@@ -8,10 +8,12 @@ import java.util.List;
 import javax.servlet.SessionTrackingMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import com.IoT.model.model;
+import com.IoT.model.raintime;
 import com.mysql.jdbc.Statement;
 
 import net.sf.json.JSONArray;
@@ -41,29 +43,36 @@ public class DAO {
 		return JSONArray.fromObject(lc).toString();
 	}
 	
-	public void setRain() {
-		String sql = "select rain from iotdata where id= 1;";
-		List<model> m= jdb.query(sql, new RowMapper<model>(){
-			public model mapRow(ResultSet res, int arg1) throws SQLException
-			{
-				model m = new model();
-				m.setRain(res.getInt("rain"));
-				return m;
-			}
-		});
-		int cur_rain= m.get(0).getRain();
-		if (cur_rain == 0) {
-			String stmt = "update iotdata set rain= ? " +"where id= 1;";
-			jdb.update(stmt, new Object[]{1});
-		} else {
-			String stmt = "update iotdata set rain= ? " +"where id= 1;";
-			jdb.update(stmt, new Object[]{0});
-		}
+	public void setRain(int rain) {
 		
+		raintime raintime= new raintime();
+		String stmt = "update iotdata set rain= ? " +"where id= 1;";
+		if (rain == 1) {
+			 raintime.setFlag(true);
+			 raintime.setMillisec(0);
+			 while (true) {
+				 if (!raintime.getFlag()) break;
+				 raintime.setMillisec(raintime.getMillisec()+1000);
+				 System.out.println(raintime.getMillisec());
+				 jdb.update(stmt, new Object[]{raintime.getMillisec()});
+                 try {	 
+                     Thread.sleep(1000);
+                 } catch (InterruptedException e) {
+                     e.printStackTrace();
+                 }
+             }
+		} else {
+			raintime.setFlag(false);
+			System.out.println(raintime.getMillisec());
+			jdb.update(stmt, new Object[]{raintime.getMillisec()});
+		}
+		/*
+		String stmt = "update iotdata set rain= ? " +"where id= 1;";
+		jdb.update(stmt, new Object[]{rain});*/
 	}
 	
-	public void setRedsensor() {
-		String sql = "select redsensor from iotdata where id= 1;";
+	public void setRedsensor(int redsensor) {
+		/*String sql = "select redsensor from iotdata where id= 1;";
 		List<model> m= jdb.query(sql, new RowMapper<model>(){
 			public model mapRow(ResultSet res, int arg1) throws SQLException
 			{
@@ -79,12 +88,16 @@ public class DAO {
 		} else {
 			String stmt = "update iotdata set redsensor= ? " +"where id= 1;";
 			jdb.update(stmt, new Object[]{0});
-		}
+		}*/
 		
+		String stmt = "update iotdata set redsensor= ? " +"where id= 1;";
+		jdb.update(stmt, new Object[]{redsensor});
 	}
 	
 	public void setThreshold(int threshold) {
 		String stmt = "update iotdata set threshold= ? " +"where id= 1;";
 		jdb.update(stmt, new Object[]{threshold});
 	}
+	
 }
+

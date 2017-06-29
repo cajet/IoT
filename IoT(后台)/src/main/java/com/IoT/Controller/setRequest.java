@@ -17,10 +17,10 @@ public class setRequest {
 	@Autowired
 	private DAO md;
 	
-	@RequestMapping("/rain")
-	void setRain(HttpServletResponse response) throws IOException {
+	@RequestMapping("/rain/{rain}")
+	void setRain(@PathVariable("rain") int rain, HttpServletResponse response) throws IOException {
 		//后面再来改成计算时间，setRain就不需要参数，即接到请求就开始计时
-		md.setRain();
+		md.setRain(rain);
 	}
 	
 	@RequestMapping("/threshold/{threshold}")
@@ -28,8 +28,8 @@ public class setRequest {
 		md.setThreshold(threshold);
 	}
 	
-	@RequestMapping("/redsensor")
-	void setRedsensor(HttpServletResponse response) throws IOException {
-		md.setRedsensor();
+	@RequestMapping("/redsensor/{redsensor}")
+	void setRedsensor(@PathVariable("redsensor") int redsensor,HttpServletResponse response) throws IOException {
+		md.setRedsensor(redsensor);
 	}
 }

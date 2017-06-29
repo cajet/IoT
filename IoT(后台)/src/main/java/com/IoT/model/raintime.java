@@ -2,18 +2,37 @@ package com.IoT.model;
 
 public class raintime {
 	
-	private int time= 0;
+	private static long begintime;
 	
-	private boolean isRaining= false;
+	private static long endtime;
 	
-	public void setTime(int time) {
-		this.time= time;
+	private static boolean flag= true;
+	
+	private static int millisecond= 0;
+	
+	public void setBeginTime(long bt) {
+		this.begintime= bt;
+	}
+	public long getBeginTime() {
+		return begintime;
 	}
 	
-	public int getTime() {
-		return time;
+	public void setEndTime(long et) {
+		this.endtime= et;
 	}
-	public boolean getIsRaining() {
-		return isRaining;
+	public long getEndTime() {
+		return endtime;
+	}
+	public void setFlag(boolean flag) {
+		this.flag= flag;
+	}
+	public boolean getFlag() {
+		return flag;
+	}
+	public void setMillisec(int ms) {
+		this.millisecond= ms;
+	}
+	public int getMillisec() {
+		return millisecond;
 	}
 }
