@@ -1,5 +1,7 @@
 package ypy.client;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -7,6 +9,7 @@ import android.media.SoundPool;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -140,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         sp.play(spMap.get(sound), volumnRatio, volumnRatio, 1, number, 1);
     }
 
-    Runnable getTask= new Runnable() { //返回所有电影的信息
+    Runnable getTask= new Runnable() { //返回下雨时长、阈值、红外情况
         @Override
         public void run() {
             String baseURL = "http://172.18.71.17:8080/IoT/get";
@@ -255,17 +258,24 @@ public class MainActivity extends AppCompatActivity {
             threshold=hour2*3600+min2*60+sec2;
 
             if (isRain >= threshold ||red.getText().toString().equals("红外预警")) {
-                playSounds(1,1);
+
                 if (isRain >= threshold) {
+                    playSounds(1,1);
                     currentTime.setTextColor(getResources().getColor(R.color.colorPrimary));
                 }
+                if (red.getText().toString().equals("红外预警")){
+                    Utils.Vibrate(MainActivity.this, 200);
+                }
             } else {
+
                 currentTime.setTextColor(getResources().getColor(R.color.grey));
             }
 
             handler2.postDelayed(this, 1000);
         }
     };
+
+
 
 
 }
